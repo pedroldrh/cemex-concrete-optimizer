@@ -1,0 +1,17 @@
+# ILLUSTRATIVE material prices in currency units per kilogram.
+# These are NOT CEMEX prices. They are placeholder market-order-of-magnitude
+# values so the prototype can demonstrate the cost-optimization workflow.
+# Edit them in this file or directly in the app sidebar / optimizer page.
+currency: USD
+prices_per_kg:
+  cement: 0.13
+  slag: 0.055
+  fly_ash: 0.040
+  water: 0.0015
+  superplasticizer: 2.50
+  coarse_aggregate: 0.014
+  fine_aggregate: 0.012
+# Optional flat cost added to every cubic metre (transport, energy, labor,
+# plant overhead, margin). Left at zero because the prototype only models
+# material cost unless the user supplies these separately.
+additional_cost_per_m3: 0.0

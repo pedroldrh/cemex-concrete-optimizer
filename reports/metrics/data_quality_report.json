@@ -1,0 +1,120 @@
+{
+  "n_rows": 1030,
+  "missing_values": {
+    "cement": 0,
+    "slag": 0,
+    "fly_ash": 0,
+    "water": 0,
+    "superplasticizer": 0,
+    "coarse_aggregate": 0,
+    "fine_aggregate": 0,
+    "age_days": 0,
+    "strength_mpa": 0
+  },
+  "duplicate_rows": 25,
+  "field_stats": {
+    "cement": {
+      "unit": "kg/m3",
+      "min": 102.0,
+      "max": 540.0,
+      "mean": 281.16563106796116,
+      "std": 104.5071416428718
+    },
+    "slag": {
+      "unit": "kg/m3",
+      "min": 0.0,
+      "max": 359.4,
+      "mean": 73.89548543689321,
+      "std": 86.27910364316895
+    },
+    "fly_ash": {
+      "unit": "kg/m3",
+      "min": 0.0,
+      "max": 200.1,
+      "mean": 54.1871359223301,
+      "std": 63.99646938186508
+    },
+    "water": {
+      "unit": "kg/m3",
+      "min": 121.75,
+      "max": 247.0,
+      "mean": 181.56635922330096,
+      "std": 21.355567066911522
+    },
+    "superplasticizer": {
+      "unit": "kg/m3",
+      "min": 0.0,
+      "max": 32.2,
+      "mean": 6.203111650485437,
+      "std": 5.973491650590111
+    },
+    "coarse_aggregate": {
+      "unit": "kg/m3",
+      "min": 801.0,
+      "max": 1145.0,
+      "mean": 972.9185922330097,
+      "std": 77.75381809178927
+    },
+    "fine_aggregate": {
+      "unit": "kg/m3",
+      "min": 594.0,
+      "max": 992.6,
+      "mean": 773.5788834951456,
+      "std": 80.1754273990239
+    },
+    "age_days": {
+      "unit": "days",
+      "min": 1.0,
+      "max": 365.0,
+      "mean": 45.662135922330094,
+      "std": 63.16991158103249
+    },
+    "strength_mpa": {
+      "unit": "MPa",
+      "min": 2.331807832,
+      "max": 82.5992248,
+      "mean": 35.8178358261136,
+      "std": 16.705679174867946
+    }
+  },
+  "outlier_counts_iqr": {
+    "cement": 0,
+    "slag": 2,
+    "fly_ash": 0,
+    "water": 9,
+    "superplasticizer": 10,
+    "coarse_aggregate": 0,
+    "fine_aggregate": 5,
+    "age_days": 59,
+    "strength_mpa": 4
+  },
+  "water_binder_ratio": {
+    "min": 0.23507335380416242,
+    "max": 0.9,
+    "mean": 0.4692360243493964,
+    "std": 0.1271266440024555,
+    "implausible_count": 0,
+    "plausible_range": [
+      0.2,
+      2.0
+    ]
+  },
+  "total_mass_kg_m3": {
+    "min": 2194.6,
+    "max": 2551.0,
+    "mean": 2343.515199029126,
+    "std": 65.36286082644413
+  },
+  "units": {
+    "cement": "kg/m3",
+    "slag": "kg/m3",
+    "fly_ash": "kg/m3",
+    "water": "kg/m3",
+    "superplasticizer": "kg/m3",
+    "coarse_aggregate": "kg/m3",
+    "fine_aggregate": "kg/m3",
+    "age_days": "days",
+    "strength_mpa": "MPa"
+  },
+  "note": "Outliers and implausible ratios are reported, not deleted. Any row removal must be an explicit, documented decision."
+}

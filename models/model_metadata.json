@@ -1,0 +1,117 @@
+{
+  "model_type": "ExtraTreesRegressor",
+  "best_params": {
+    "max_features": 1.0
+  },
+  "features": [
+    "cement",
+    "slag",
+    "fly_ash",
+    "water",
+    "superplasticizer",
+    "coarse_aggregate",
+    "fine_aggregate",
+    "age_days",
+    "binder_total",
+    "water_binder_ratio",
+    "aggregate_total",
+    "coarse_fine_ratio",
+    "cement_fraction",
+    "scm_fraction",
+    "total_mix_mass"
+  ],
+  "target": "strength_mpa",
+  "training_date_utc": "2026-07-13T20:12:49.897321+00:00",
+  "data_rows": 1030,
+  "split_rows": {
+    "train": 747,
+    "validation": 114,
+    "test": 169
+  },
+  "split_strategy": "GroupShuffleSplit 70/15/15 grouped by ingredient quantities rounded to the nearest kg (age excluded) to keep repeated tests of one recipe in a single partition.",
+  "validation_metrics": {
+    "mae": 4.121322123026656,
+    "rmse": 5.9798146993059085,
+    "r2": 0.8054705265944597
+  },
+  "cv_mae_mean": 4.16767614506476,
+  "cv_mae_std": 0.5617462400440119,
+  "cv_mae_folds": [
+    4.8003413704280185,
+    3.4782851315057566,
+    3.575248112530216,
+    4.757392281913797,
+    4.227113828946014
+  ],
+  "test_metrics": {
+    "mae": 3.298609579833006,
+    "rmse": 4.676820958584349,
+    "r2": 0.9036966487329807
+  },
+  "training_feature_ranges": {
+    "cement": {
+      "min": 102.0,
+      "max": 540.0
+    },
+    "slag": {
+      "min": 0.0,
+      "max": 359.4
+    },
+    "fly_ash": {
+      "min": 0.0,
+      "max": 200.1
+    },
+    "water": {
+      "min": 121.75,
+      "max": 247.0
+    },
+    "superplasticizer": {
+      "min": 0.0,
+      "max": 32.2
+    },
+    "coarse_aggregate": {
+      "min": 801.0,
+      "max": 1145.0
+    },
+    "fine_aggregate": {
+      "min": 594.0,
+      "max": 992.6
+    },
+    "age_days": {
+      "min": 1.0,
+      "max": 365.0
+    },
+    "binder_total": {
+      "min": 200.0,
+      "max": 640.0
+    },
+    "water_binder_ratio": {
+      "min": 0.23507335380416242,
+      "max": 0.9
+    },
+    "aggregate_total": {
+      "min": 1457.0,
+      "max": 1970.0
+    },
+    "coarse_fine_ratio": {
+      "min": 0.8584525488615756,
+      "max": 1.874876033057851
+    },
+    "cement_fraction": {
+      "min": 0.264,
+      "max": 1.0
+    },
+    "scm_fraction": {
+      "min": 0.0,
+      "max": 0.736
+    },
+    "total_mix_mass": {
+      "min": 2194.6,
+      "max": 2551.0
+    }
+  },
+  "random_seed": 42,
+  "dataset_file": "concrete_data.xlsx",
+  "dataset_sha256": "195ddfcd4c24bc714c4220284c367411fb0718ecc9df4984dd4c2fee03dab621",
+  "uncertainty_note": "Prototype uncertainty estimate (tree spread / validation error), not a formally calibrated safety guarantee."
+}

@@ -1,0 +1,27 @@
+2026-07-13 22:12:42,000 INFO src.data_loader: Loading dataset from /Users/pedro/cemex-concrete-optimizer/data/raw/concrete_data.xlsx
+2026-07-13 22:12:42,053 INFO src.data_loader: Loaded 1030 rows, 9 columns
+2026-07-13 22:12:42,058 INFO __main__: Data quality: 1030 rows, 25 duplicates reported (kept)
+2026-07-13 22:12:42,090 INFO __main__: Group-aware split: train=747, val=114, test=169 rows
+2026-07-13 22:12:42,110 INFO __main__: DummyRegressor: val MAE=11.222 RMSE=14.119 R2=-0.085 | CV MAE=14.087±1.020 {}
+2026-07-13 22:12:42,119 INFO __main__: LinearRegression: val MAE=7.335 RMSE=9.804 R2=0.477 | CV MAE=8.449±0.446 {}
+2026-07-13 22:12:43,527 INFO __main__: Ridge: val MAE=7.364 RMSE=9.736 R2=0.484 | CV MAE=8.412±0.373 {'model__alpha': 10.0}
+2026-07-13 22:12:45,045 INFO __main__: RandomForestRegressor: val MAE=4.726 RMSE=6.411 R2=0.776 | CV MAE=4.308±0.633 {'max_features': 1.0}
+2026-07-13 22:12:46,051 INFO __main__: ExtraTreesRegressor: val MAE=4.121 RMSE=5.980 R2=0.805 | CV MAE=4.168±0.562 {'max_features': 1.0}
+2026-07-13 22:12:47,585 INFO __main__: HistGradientBoostingRegressor: val MAE=4.500 RMSE=6.050 R2=0.801 | CV MAE=4.201±0.386 {'learning_rate': 0.1, 'max_leaf_nodes': 31}
+2026-07-13 22:12:49,785 INFO __main__: GradientBoostingRegressor: val MAE=4.345 RMSE=5.920 R2=0.809 | CV MAE=4.319±0.523 {'learning_rate': 0.05, 'n_estimators': 400}
+2026-07-13 22:12:49,785 INFO __main__: Selected model: ExtraTreesRegressor
+2026-07-13 22:12:49,896 INFO __main__: Final test (single evaluation): MAE=3.299 RMSE=4.677 R2=0.904
+2026-07-13 22:12:49,931 INFO __main__: Saved /Users/pedro/cemex-concrete-optimizer/models/best_model.joblib and /Users/pedro/cemex-concrete-optimizer/models/model_metadata.json
+2026-07-13 22:12:55,217 WARNING matplotlib.font_manager: Matplotlib is building the font cache; this may take a moment.
+2026-07-13 22:12:56,776 INFO matplotlib.font_manager: Failed to extract font properties from /System/Library/Fonts/LastResort.otf: tuple indices must be integers or slices, not str
+2026-07-13 22:12:56,781 INFO matplotlib.font_manager: Failed to extract font properties from /System/Library/PrivateFrameworks/FontServices.framework/Resources/Reserved/PingFangUI.ttc: FT_Open_Face (ft2font.cpp line 200) failed with error 0x02: unknown file format
+2026-07-13 22:12:56,850 INFO matplotlib.font_manager: Failed to extract font properties from /System/Library/Fonts/Apple Color Emoji.ttc: Non-scalable fonts are not supported
+2026-07-13 22:12:56,859 INFO matplotlib.font_manager: Failed to extract font properties from /System/Library/Fonts/Supplemental/NISC18030.ttf: Non-scalable fonts are not supported
+2026-07-13 22:12:56,943 INFO matplotlib.font_manager: generated new fontManager
+2026-07-13 22:12:57,368 INFO src.evaluate: Saved figure /Users/pedro/cemex-concrete-optimizer/reports/figures/actual_vs_predicted.png
+2026-07-13 22:12:57,400 INFO src.evaluate: Saved figure /Users/pedro/cemex-concrete-optimizer/reports/figures/residuals_vs_predicted.png
+2026-07-13 22:12:57,428 INFO src.evaluate: Saved figure /Users/pedro/cemex-concrete-optimizer/reports/figures/residual_distribution.png
+2026-07-13 22:12:57,450 INFO src.evaluate: Saved figure /Users/pedro/cemex-concrete-optimizer/reports/figures/cv_mae_distribution.png
+2026-07-13 22:12:57,494 INFO src.evaluate: Saved figure /Users/pedro/cemex-concrete-optimizer/reports/figures/error_by_group.png
+2026-07-13 22:12:57,548 INFO src.evaluate: Saved figure /Users/pedro/cemex-concrete-optimizer/reports/figures/feature_importance.png
+2026-07-13 22:12:59,941 INFO src.evaluate: Saved figure /Users/pedro/cemex-concrete-optimizer/reports/figures/permutation_importance.png
