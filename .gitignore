@@ -9,3 +9,4 @@ data/processed/*
 !data/processed/.gitkeep
 # The raw dataset (CC BY 4.0, see README attribution) and trained model ARE
 # committed so the Streamlit Cloud deployment works out of the box.
+CONTEXTO_PROYECTO.md

@@ -7,15 +7,26 @@
 
 ## Objective
 
-Demonstrate how machine learning plus constrained optimization can answer:
+Two complementary tools around one economic fact — concrete plants target
+strength above what customers order (a safety cushion), and cushion is paid
+for in cement:
 
-> *"What is the lowest-cost concrete mixture that is predicted to achieve a
-> required compressive strength, while respecting engineering and material
-> constraints?"*
+1. **Overdesign audit** (`src/audit.py`) — the primary practical tool. Feed
+   it a plant's strength-test export and, per mix family, it computes the
+   plant's real standard deviation, the mean strength the EN 206 conformity
+   criterion requires (`f_ck + 1.48σ`), the mean actually produced, and the
+   excess translated into cement kg/m³, €/year and tCO₂/year. Model-free:
+   just the code's own formula applied to the plant's own records. Industry
+   literature (NRMCA/ACI, *"Excessive Overdesign of Concrete Mixtures"*)
+   documents typical excesses of 3–5 MPa beyond the required margin.
+2. **Mix optimizer prototype** (the Streamlit app) — demonstrates the ML
+   layer: strength prediction plus constrained cost optimization answering
+   *"what is the lowest-cost mixture predicted to achieve a required
+   strength?"*. Built on the public UCI dataset; designed so plant data and
+   real engineering constraints can replace the public assumptions.
 
-Built on the public UCI Concrete Compressive Strength dataset and designed so
-CEMEX data and real engineering constraints can replace the public assumptions
-later.
+The audit needs no ML and no trust in a model — it is the credibility-first
+entry point. The optimizer is what a plant-data version grows into.
 
 ## Screenshot
 
@@ -36,7 +47,9 @@ cemex-concrete-optimizer/
 ├── data/processed/         # Written by training
 ├── models/                 # best_model.joblib + model_metadata.json
 ├── reports/figures|metrics # Evaluation artifacts, data-quality report
+├── reports/audit/          # Overdesign audit output (report + figures)
 ├── src/
+│   ├── audit.py            # EN 206 overdesign audit (model-free, Spanish report)
 │   ├── data_loader.py      # Load + normalize columns
 │   ├── validation.py       # Fatal checks + data-quality report
 │   ├── features.py         # Derived features, recipe group key
@@ -45,6 +58,7 @@ cemex-concrete-optimizer/
 │   ├── uncertainty.py      # Conservative strength estimate
 │   ├── extrapolation.py    # Distance-to-history checks
 │   ├── optimizer.py        # Differential evolution + penalties + diversity
+│   ├── workability.py      # Advisory slump model (UCI slump dataset)
 │   ├── economics.py        # Costs, savings, annual projection
 │   └── schemas.py          # Pydantic prices/constraints/recommendation
 └── tests/                  # pytest suite (synthetic data ONLY in tests)
@@ -94,10 +108,23 @@ licensed CC BY 4.0. This repository includes a copy at
 ## Commands
 
 ```bash
-python -m src.train      # train, compare, select, evaluate, save model
-streamlit run app.py     # launch the application
-pytest                   # run the test suite
+python -m src.train              # train, compare, select, evaluate, save model
+python -m src.workability       # train the advisory slump model (optional)
+streamlit run app.py             # launch the application
+pytest                           # run the test suite
+
+# Overdesign audit (the model-free tool):
+python -m src.audit --demo                      # synthetic demo, no data needed
+python -m src.audit plant_export.csv --price 110 --volume 15000
 ```
+
+The audit accepts CSV/Excel exports as-is (Spanish or English headers) and
+needs, per row: mix family, specified strength (f_ck) and measured 28-day
+strength. Optional columns (cement kg/m³, annual volume) enrich the output.
+It writes a one-page Spanish report plus one histogram per family to
+`reports/audit/`, and distinguishes three verdicts honestly: relevant excess,
+well-tuned family, or mean *below* the code requirement (a nonconformity
+risk, flagged instead of counted as savings).
 
 ## Model metrics (what they mean)
 
@@ -168,8 +195,13 @@ content). This prototype now covers two of those, honestly scoped:
 
 * Public lab data: no local material chemistry, aggregate grading/moisture,
   plant process data, or environmental conditions.
-* Predicts compressive strength only — no durability, slump/workability,
-  setting time, air content, or exposure-class awareness.
+* The primary model predicts compressive strength; slump is covered only by
+  a weak advisory screen and durability only by prototype exposure-class
+  rules (see *Beyond strength*). Setting time, air content and shrinkage
+  remain unmodeled.
+* The audit's MPa→cement conversion (~6 kg/m³ per MPa) is a rule of thumb;
+  each family's real response curve belongs to the plant's QC team, and any
+  trim must respect durability floors and be validated with trial batches.
 * Prices are illustrative placeholders; only material cost is modeled.
 * Uncertainty estimate is heuristic; prediction is correlation, not causation.
 * Cost optimizers gravitate to data edges; extrapolation checks mitigate but

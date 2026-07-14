@@ -1,5 +1,13 @@
 # Prototype Audit — CEMEX Concrete Mix Optimizer
 
+> **Addendum (2026-07-14):** since this audit was written, the project added
+> its primary practical tool — the model-free EN 206 overdesign audit
+> (`src/audit.py`), an advisory slump screen (`src/workability.py`), and
+> exposure-class durability constraints. This document reviews the original
+> ML optimizer prototype; the overdesign audit deliberately sidesteps most
+> of the model-trust risks listed below by using only the code's conformity
+> formula on the plant's own records.
+
 Reviewed from four perspectives: machine-learning engineer, concrete materials
 engineer, CEMEX operations manager, and financial analyst.
 
