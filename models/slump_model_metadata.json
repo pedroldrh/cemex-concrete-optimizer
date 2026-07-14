@@ -1,0 +1,23 @@
+{
+  "purpose": "ADVISORY workability screen only \u2014 not a guarantee",
+  "dataset": "UCI Concrete Slump Test (Yeh 2007), 103 rows",
+  "target": "slump_cm",
+  "features": [
+    "cement",
+    "slag",
+    "fly_ash",
+    "water",
+    "superplasticizer",
+    "coarse_aggregate",
+    "fine_aggregate"
+  ],
+  "cv_mae_cm_mean": 5.26593373015873,
+  "cv_mae_cm_std": 0.8948413344275481,
+  "slump_observed_range_cm": [
+    0.0,
+    29.0
+  ],
+  "training_date_utc": "2026-07-14T08:40:53.923066+00:00",
+  "random_seed": 42,
+  "caveat": "103 lab mixes with materials unrelated to the strength dataset. Predictions flag implausible workability; they must not be used as acceptance criteria. Retrain on plant slump records for real use."
+}

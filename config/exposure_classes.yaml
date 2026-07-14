@@ -1,0 +1,40 @@
+# PROTOTYPE exposure-class presets — REQUIRE REVIEW BY A CONCRETE MATERIALS
+# ENGINEER AND MUST BE REPLACED WITH THE GOVERNING LOCAL CODE VALUES
+# (EN 206 / ACI 318 / NMX as applicable) BEFORE ANY REAL USE.
+#
+# Durability is enforced in practice through design rules like these (maximum
+# water-to-binder ratio and minimum binder content), not through per-batch
+# measurement. Values below are indicative of EN-206-style ordering only.
+# Air-entrainment requirements (freeze-thaw) involve an admixture this
+# prototype does not model; classes that need it are marked.
+exposure_classes:
+  none:
+    label: "No exposure preset (strength-only prototype default)"
+    max_water_binder: null
+    min_binder_kg_m3: 0
+    requires_air_entrainment: false
+  mild_indoor:
+    label: "Mild / indoor, dry (carbonation risk low)"
+    max_water_binder: 0.65
+    min_binder_kg_m3: 240
+    requires_air_entrainment: false
+  outdoor_carbonation:
+    label: "Outdoor, rain-exposed (carbonation)"
+    max_water_binder: 0.55
+    min_binder_kg_m3: 280
+    requires_air_entrainment: false
+  chlorides_deicing:
+    label: "Chlorides / de-icing salts (reinforcement corrosion)"
+    max_water_binder: 0.45
+    min_binder_kg_m3: 320
+    requires_air_entrainment: false
+  freeze_thaw:
+    label: "Freeze-thaw (NEEDS air entrainment — not modeled here)"
+    max_water_binder: 0.50
+    min_binder_kg_m3: 300
+    requires_air_entrainment: true
+  marine:
+    label: "Marine / seawater"
+    max_water_binder: 0.45
+    min_binder_kg_m3: 340
+    requires_air_entrainment: false

@@ -140,6 +140,30 @@ distance from the data center, and nearest-neighbor distance — normalized so
 1.0 ≈ the edge of the historical envelope. High-risk candidates are rejected
 by default and nearest historical recipes are shown for comparison.
 
+## Beyond strength: workability and durability
+
+Customers buy more than strength (slump, setting time, durability, air
+content). This prototype now covers two of those, honestly scoped:
+
+* **Workability (advisory)**: a slump model trained on the UCI Concrete Slump
+  Test dataset (I-Cheng Yeh 2007, <https://doi.org/10.24432/C5FG7D>, 103 rows,
+  CC BY 4.0, included at `data/raw/concrete_slump.csv`; train with
+  `python -m src.workability`). Each recommendation gets `predicted_slump_cm`
+  and a `workability_flag`. With only 103 unrelated lab mixes (CV MAE ~±5 cm)
+  this is a plausibility screen, never an acceptance criterion. In production
+  slump is measured on nearly every load, so a plant-data version could model
+  it properly.
+* **Durability (rules, not ML)**: exposure-class presets
+  (`config/exposure_classes.yaml`) apply a maximum water-to-binder ratio and a
+  minimum binder content as hard optimizer constraints — mirroring how codes
+  (EN 206 / ACI 318) actually enforce durability. Values are PROTOTYPE
+  placeholders an engineer must replace with the governing code. Binder
+  required for durability is never trimmed for cost, even when strength alone
+  would allow it. Freeze-thaw classes need air entrainment, which is not
+  modeled; the app flags this.
+* **Still unmodeled**: setting time, air content, shrinkage, pumpability —
+  these require plant or lab data that the public datasets do not contain.
+
 ## Limitations
 
 * Public lab data: no local material chemistry, aggregate grading/moisture,

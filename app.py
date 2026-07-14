@@ -246,12 +246,27 @@ def render_constraint_editor(key_prefix: str) -> Constraints:
     )
 
 
+@st.cache_resource(show_spinner=False)
+def get_slump_predictor():
+    from src.workability import load_slump_predictor
+
+    return load_slump_predictor()
+
+
+def load_exposure_classes() -> dict:
+    return config.load_yaml(config.CONFIG_DIR / "exposure_classes.yaml")[
+        "exposure_classes"
+    ]
+
+
 def run_optimizer(prices: MaterialPrices, constraints: Constraints, n_recs: int):
     estimator = build_estimator(model, metadata, uncertainty_multiplier)
     extrapolator = get_extrapolator(dataset_path_input)
+    slump_bundle = get_slump_predictor()
     return optimize_mixes(
         estimator, prices, constraints, extrapolator,
         n_recommendations=n_recs, seed=config.RANDOM_SEED,
+        slump_model=slump_bundle[0] if slump_bundle else None,
     ), extrapolator, estimator
 
 
@@ -446,6 +461,38 @@ elif page.startswith("4"):
         prices = render_prices_editor("opt")
     with st.expander("Engineering constraints", expanded=False):
         constraints = render_constraint_editor("opt")
+
+    exposure_classes = load_exposure_classes()
+    exposure_key = st.selectbox(
+        "Exposure class (durability preset — PROTOTYPE values, engineer must "
+        "replace with governing code)",
+        options=list(exposure_classes),
+        format_func=lambda k: exposure_classes[k]["label"],
+    )
+    exposure = exposure_classes[exposure_key]
+    if exposure["max_water_binder"] is not None:
+        constraints = constraints.model_copy(update={
+            "water_binder_ratio": Bounds(
+                min=constraints.water_binder_ratio.min,
+                max=min(
+                    constraints.water_binder_ratio.max,
+                    float(exposure["max_water_binder"]),
+                ),
+            ),
+            "min_binder_total": float(exposure["min_binder_kg_m3"]),
+        })
+        st.caption(
+            f"Applied durability floor: water/binder ≤ "
+            f"{constraints.water_binder_ratio.max:.2f}, binder ≥ "
+            f"{constraints.min_binder_total:.0f} kg/m³. Binder kept for "
+            "durability must NOT be trimmed for cost, even if strength allows."
+        )
+    if exposure["requires_air_entrainment"]:
+        st.warning(
+            "This exposure class requires air entrainment, an admixture this "
+            "prototype does not model. Treat all results as incomplete for "
+            "freeze-thaw service.", icon="⚠️",
+        )
     n_recs = st.number_input("Number of recommendations", 1, 10, 5)
 
     st.subheader("Baseline")
@@ -508,6 +555,15 @@ elif page.startswith("4"):
             recs = result.recommendations
             st.subheader("Ranked recommendations")
             st.dataframe(recs.round(3), width="stretch")
+            if "predicted_slump_cm" in recs.columns:
+                slump_meta = get_slump_predictor()[1]
+                st.caption(
+                    "predicted_slump_cm is ADVISORY ONLY: trained on the "
+                    "103-row UCI slump dataset (CV MAE "
+                    f"±{slump_meta['cv_mae_cm_mean']:.1f} cm) with materials "
+                    "unrelated to the strength data. 'check' flags mixes whose "
+                    "workability needs lab verification before anything else."
+                )
             st.download_button(
                 "Download recommendations (CSV)",
                 recs.to_csv(index=False).encode(),
@@ -681,10 +737,14 @@ local raw-material chemistry, aggregate grading and moisture, admixture brands,
 plant-specific process data, and environmental conditions. Its mixes may not
 resemble CEMEX production mixes.
 
-**Missing performance dimensions.** The model predicts compressive strength
-only. It knows nothing about durability targets, workability or slump,
-setting time, air content, shrinkage, exposure classes, or pumpability — all
-of which can make a "cheap" mix unusable in practice.
+**Missing performance dimensions.** The primary model predicts compressive
+strength only. Workability now has an *advisory* slump screen (103-row UCI
+slump dataset — a plausibility flag, not a guarantee), and durability is
+handled through prototype exposure-class presets (max water/binder, minimum
+binder) that an engineer must replace with governing code values. Setting
+time, air content, shrinkage, and pumpability remain unmodeled — any of these
+can make a "cheap" mix unusable in practice. In production, slump is measured
+on nearly every load, so a plant-data version could model it properly.
 
 **Model uncertainty.** The uncertainty estimate (tree-ensemble spread plus
 validation error buffer) is a prototype heuristic, **not** a calibrated safety

@@ -74,6 +74,10 @@ class Constraints(BaseModel):
     age_days: float = Field(gt=0)
     uncertainty_multiplier: float = Field(default=1.0, ge=0)
     max_extrapolation_score: float = Field(default=1.2, gt=0)
+    # Durability-style floor (e.g. from an exposure class): total binder
+    # (cement + slag + fly_ash) must be at least this many kg/m3, regardless
+    # of what strength alone would allow. 0 disables the check.
+    min_binder_total: float = Field(default=0.0, ge=0)
 
     @model_validator(mode="after")
     def check_ingredients(self) -> "Constraints":

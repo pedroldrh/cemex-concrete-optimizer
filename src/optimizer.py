@@ -44,7 +44,12 @@ RESULT_COLUMNS = [
 CONSTRAINT_KEYS = [
     "strength", "water_binder_min", "water_binder_max",
     "total_mass_min", "total_mass_max", "extrapolation", "binder_positive",
+    "binder_min",
 ]
+
+# Advisory slump window (cm): outside this, a recommendation gets a
+# workability "check" flag. Typical pumpable targets sit inside it.
+ADVISORY_SLUMP_RANGE_CM = (5.0, 25.0)
 
 
 @dataclass
@@ -112,6 +117,9 @@ def _violations(evaluated: pd.DataFrame, constraints: Constraints) -> pd.DataFra
                 - constraints.max_extrapolation_score,
             ),
             "binder_positive": np.where(evaluated["binder_total"] <= 0, 1.0, 0.0),
+            "binder_min": np.maximum(
+                0.0, constraints.min_binder_total - evaluated["binder_total"]
+            ),
         }
     )
 
@@ -146,6 +154,7 @@ def optimize_mixes(
     maxiter: int = 120,
     popsize: int = 16,
     seed: int = 42,
+    slump_model: object | None = None,
 ) -> OptimizationResult:
     """Generate up to n_recommendations distinct valid low-cost mixtures.
 
@@ -257,6 +266,19 @@ def optimize_mixes(
     evaluated = evaluated.sort_values("cost_per_m3").reset_index(drop=True)
     evaluated.insert(0, "rank", np.arange(1, len(evaluated) + 1))
 
+    result_columns = list(RESULT_COLUMNS)
+    if slump_model is not None:
+        # ADVISORY only: slump model is trained on 103 unrelated lab mixes.
+        from src.workability import predict_slump
+
+        slump = predict_slump(slump_model, evaluated)
+        evaluated["predicted_slump_cm"] = slump
+        low, high = ADVISORY_SLUMP_RANGE_CM
+        evaluated["workability_flag"] = np.where(
+            (slump >= low) & (slump <= high), "ok", "check"
+        )
+        result_columns += ["predicted_slump_cm", "workability_flag"]
+
     message = f"Found {len(evaluated)} distinct valid mixture(s)."
     if len(evaluated) < n_recommendations:
         message += (
@@ -264,7 +286,7 @@ def optimize_mixes(
             "current constraints did not yield more distinct optima."
         )
     return OptimizationResult(
-        recommendations=evaluated[RESULT_COLUMNS],
+        recommendations=evaluated[result_columns],
         success=True,
         message=message,
         violation_counts=violation_totals,
